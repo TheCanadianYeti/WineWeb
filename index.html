@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wine List</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+  <!-- HEADER -->
+  <header class="header">
+    <h1>Wine List</h1>
+    <button id="theme-toggle" aria-label="Toggle Dark/Light Mode">🌙</button>
+  </header>
+
+  <!-- MAIN CONTENT -->
+ <div class="content">
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search wines..." />
+
+    <div class="sort-controls">
+      <select id="sort-field">
+        <option value="">Sort by…</option>
+        <option value="vintage">Vintage</option>
+        <option value="type">Wine Type</option>
+        <option value="grape">Grape</option>
+        <option value="region">Region</option>
+        <option value="rating">Rating</option>
+      </select>
+
+      <select id="sort-direction">
+        <option value="asc">↑ Asc</option>
+        <option value="desc">↓ Desc</option>
+      </select>
+    </div>
+  </div>
+
+  <div id="wine-grid"></div>
+</div>
+
+
+
+  <!-- MODAL -->
+  <div id="modal" class="hidden">
+    <div class="modal-content">
+      <button id="close" aria-label="Close modal">×</button>
+
+      <img id="modal-img">
+      <h2 id="modal-title"></h2>
+      <p id="modal-meta"></p>
+
+      <p><strong>Region:</strong> <span id="modal-region"></span></p>
+      <p><strong>Grape:</strong> <span id="modal-grape"></span></p>
+      <p><strong>Tasting Notes:</strong> <span id="modal-taste"></span></p>
+      <p><strong>Pairing:</strong> <span id="modal-pairing"></span></p>
+      <p><strong>Rating:</strong> <span id="modal-rating"></span></p>
+      <p><strong>Buy Again:</strong> <span id="modal-buy"></span></p>
+      <p id="modal-extra"></p>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
