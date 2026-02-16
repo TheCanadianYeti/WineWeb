@@ -2,66 +2,334 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Wine List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wine Collection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   
   <!-- HEADER -->
   <header class="header">
-    <h1>Wine List</h1>
-    <button id="theme-toggle" aria-label="Toggle Dark/Light Mode">🌙</button>
+    <div class="header-content">
+      <div class="brand">
+        <h1>Cellar Collection</h1>
+        <span class="subtitle">Personal Wine Archive</span>
+      </div>
+      <div class="header-actions">
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSfjSBi_Qbl5NTahCzF_CT8Wcys5OKFFm1lLdPHHtKHsovAvFg/viewform?usp=sharing&ouid=112209526880790779438" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="add-bottle-btn"
+           aria-label="Add new bottle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Add Bottle</span>
+        </a>
+        <button id="theme-toggle" aria-label="Toggle Theme">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+      </div>
+    </div>
   </header>
 
   <!-- MAIN CONTENT -->
- <div class="content">
+  <main class="content">
+    
+    <!-- Search and Filter Section -->
+    <div class="controls">
+      <div class="search-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input type="text" id="search" placeholder="Search by name, vintage, region..." />
+        <button id="clear-search" class="clear-btn hidden" aria-label="Clear search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
 
-  <div class="controls">
-    <input type="text" id="search" placeholder="Search wines..." />
+      <div class="sort-controls">
+        <div class="select-wrapper">
+          <select id="sort-field">
+            <option value="">Sort by</option>
+            <option value="vintage">Vintage</option>
+            <option value="type">Wine Type</option>
+            <option value="grape">Grape Variety</option>
+            <option value="region">Region</option>
+            <option value="rating">Rating</option>
+          </select>
+          <svg class="select-arrow" viewBox="0 0 12 8" fill="currentColor">
+            <path d="M6 8L0 0h12z"/>
+          </svg>
+        </div>
 
-    <div class="sort-controls">
-      <select id="sort-field">
-        <option value="">Sort by…</option>
-        <option value="vintage">Vintage</option>
-        <option value="type">Wine Type</option>
-        <option value="grape">Grape</option>
-        <option value="region">Region</option>
-        <option value="rating">Rating</option>
-      </select>
+        <div class="select-wrapper">
+          <select id="sort-direction">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+          <svg class="select-arrow" viewBox="0 0 12 8" fill="currentColor">
+            <path d="M6 8L0 0h12z"/>
+          </svg>
+        </div>
+      </div>
 
-      <select id="sort-direction">
-        <option value="asc">↑ Asc</option>
-        <option value="desc">↓ Desc</option>
-      </select>
+      <button id="filter-toggle" class="filter-toggle-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/>
+        </svg>
+        <span>Filters</span>
+        <span id="active-filter-count" class="filter-badge hidden">0</span>
+      </button>
     </div>
-  </div>
 
-  <div id="wine-grid"></div>
-</div>
+    <!-- Advanced Filters Panel -->
+    <div id="filters-panel" class="filters-panel hidden">
+      <div class="filters-header">
+        <h3>Advanced Filters</h3>
+        <button id="clear-filters" class="text-btn">Clear All</button>
+      </div>
 
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label class="filter-label">Wine Type</label>
+          <div id="type-filters" class="checkbox-group"></div>
+        </div>
 
+        <div class="filter-group">
+          <label class="filter-label">Region</label>
+          <div id="region-filters" class="checkbox-group"></div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Grape Variety</label>
+          <div id="grape-filters" class="checkbox-group"></div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Rating</label>
+          <div class="rating-filter">
+            <input type="range" id="min-rating" min="0" max="10" step="0.5" value="0">
+            <div class="rating-display">
+              <span id="rating-value">0+</span>
+              <span class="rating-unit">/ 10</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Repurchase</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="buy-yes" value="yes">
+              <span>Yes</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="buy-no" value="no">
+              <span>No</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="filter-label">Vintage Range</label>
+          <div class="vintage-range">
+            <input type="number" id="vintage-min" placeholder="From" min="1900" max="2099">
+            <span class="range-separator">—</span>
+            <input type="number" id="vintage-max" placeholder="To" min="1900" max="2099">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stats-info">
+        <div class="stat-item">
+          <span class="stat-label">Total Bottles</span>
+          <span class="stat-value" id="total-count">—</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-label">Displaying</span>
+          <span class="stat-value" id="display-count">—</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-label">Avg Rating</span>
+          <span class="stat-value" id="avg-rating">—</span>
+        </div>
+      </div>
+      
+      <div class="stats-actions">
+        <div class="view-toggle">
+          <button id="grid-view" class="view-btn active" aria-label="Grid view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </button>
+          <button id="list-view" class="view-btn" aria-label="List view">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <button id="export-csv" class="action-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Export</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Wine Grid -->
+    <div id="wine-grid">
+      <div class="loading-state">
+        <div class="loader"></div>
+        <p>Loading collection...</p>
+      </div>
+    </div>
+  </main>
 
   <!-- MODAL -->
-  <div id="modal" class="hidden">
-    <div class="modal-content">
-      <button id="close" aria-label="Close modal">×</button>
+  <div id="modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-container">
+      <div class="modal-content">
+        <button id="close" class="modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
 
-      <img id="modal-img">
-      <h2 id="modal-title"></h2>
-      <p id="modal-meta"></p>
+        <div class="modal-navigation">
+          <button id="prev-wine" class="nav-btn" aria-label="Previous wine">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <span id="wine-position" class="wine-position"></span>
+          <button id="next-wine" class="nav-btn" aria-label="Next wine">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
 
-      <p><strong>Region:</strong> <span id="modal-region"></span></p>
-      <p><strong>Grape:</strong> <span id="modal-grape"></span></p>
-      <p><strong>Tasting Notes:</strong> <span id="modal-taste"></span></p>
-      <p><strong>Pairing:</strong> <span id="modal-pairing"></span></p>
-      <p><strong>Rating:</strong> <span id="modal-rating"></span></p>
-      <p><strong>Buy Again:</strong> <span id="modal-buy"></span></p>
-      <p id="modal-extra"></p>
+        <div class="modal-layout">
+          <div class="modal-image-section">
+            <img id="modal-img" alt="Wine label">
+          </div>
+
+          <div class="modal-details-section">
+            <div class="modal-header">
+              <h2 id="modal-title"></h2>
+              <p id="modal-meta" class="modal-vintage"></p>
+            </div>
+
+            <div class="modal-body">
+              <div class="detail-group">
+                <div class="detail-item">
+                  <span class="detail-label">Region</span>
+                  <span id="modal-region" class="detail-value"></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Grape Variety</span>
+                  <span id="modal-grape" class="detail-value"></span>
+                </div>
+              </div>
+
+              <div class="detail-section">
+                <h3 class="section-title">Tasting Notes</h3>
+                <p id="modal-taste" class="section-content"></p>
+              </div>
+
+              <div class="detail-section">
+                <h3 class="section-title">Food Pairing</h3>
+                <p id="modal-pairing" class="section-content"></p>
+              </div>
+
+              <div class="detail-group rating-group">
+                <div class="detail-item">
+                  <span class="detail-label">Personal Rating</span>
+                  <span id="modal-rating" class="detail-value rating-value"></span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Repurchase</span>
+                  <span id="modal-buy" class="detail-value"></span>
+                </div>
+              </div>
+
+              <div id="modal-extra-section" class="detail-section hidden">
+                <h3 class="section-title">Additional Notes</h3>
+                <p id="modal-extra" class="section-content"></p>
+              </div>
+
+              <div class="detail-section notes-section">
+                <div class="notes-header">
+                  <h3 class="section-title">Personal Notes</h3>
+                  <button id="edit-notes-btn" class="text-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                    Edit
+                  </button>
+                </div>
+                <div id="notes-display" class="notes-display">
+                  <p class="empty-notes">No personal notes yet. Click Edit to add your thoughts.</p>
+                </div>
+                <div id="notes-editor" class="notes-editor hidden">
+                  <textarea id="notes-textarea" placeholder="Add your tasting notes, impressions, or reminders..." rows="4"></textarea>
+                  <div class="notes-actions">
+                    <button id="save-notes-btn" class="save-btn">Save</button>
+                    <button id="cancel-notes-btn" class="cancel-btn">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- SCRIPTS -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="script.js"></script>
+
+  <!-- Floating Add Button (Mobile) -->
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfjSBi_Qbl5NTahCzF_CT8Wcys5OKFFm1lLdPHHtKHsovAvFg/viewform?usp=sharing&ouid=112209526880790779438" 
+     target="_blank" 
+     rel="noopener noreferrer" 
+     class="fab"
+     aria-label="Add new bottle">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  </a>
 </body>
 </html>
