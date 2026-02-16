@@ -128,6 +128,8 @@ Papa.parse(sheetURL, {
   header: true,
   skipEmptyLines: true,
   complete: results => {
+    console.log('Data loaded:', results.data.length, 'wines');
+    
     wines = results.data.map(row => {
       const clean = {};
       for (let key in row) clean[key.trim()] = row[key];
@@ -148,17 +150,30 @@ Papa.parse(sheetURL, {
       };
     });
 
-    totalCount.textContent = wines.length;
+    // Update total count immediately
+    if (totalCount) {
+      totalCount.textContent = wines.length;
+      console.log('Total count updated to:', wines.length);
+    }
+    
     buildFilterOptions();
     applyFilters();
   },
   error: error => {
     console.error("Error loading data:", error);
+    if (totalCount) totalCount.textContent = "Error";
+    if (displayCount) displayCount.textContent = "Error";
+    if (avgRating) avgRating.textContent = "Error";
+    
     grid.innerHTML = `
       <div class="loading-state">
-        <p>Failed to load collection. Please refresh the page.</p>
+        <p>Failed to load collection. Please check your internet connection and refresh the page.</p>
+        <p style="color: var(--text-tertiary); font-size: 0.875rem; margin-top: 1rem;">Error: ${error.message || 'Unknown error'}</p>
       </div>
     `;
+  },
+  downloadRequestHeaders: {
+    'Accept': 'text/csv'
   }
 });
 
@@ -220,15 +235,21 @@ function buildFilterOptions() {
 ================================ */
 function render(data) {
   filteredWines = data;
-  displayCount.textContent = data.length;
+  
+  // Update display count
+  if (displayCount) {
+    displayCount.textContent = data.length;
+  }
 
-  // Calculate average rating
+  // Calculate and update average rating
   const ratings = data.map(w => parseFloat(w.rating)).filter(r => !isNaN(r) && r > 0);
-  if (ratings.length > 0) {
-    const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
-    avgRating.textContent = avg.toFixed(1);
-  } else {
-    avgRating.textContent = "—";
+  if (avgRating) {
+    if (ratings.length > 0) {
+      const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+      avgRating.textContent = avg.toFixed(1);
+    } else {
+      avgRating.textContent = "0.0";
+    }
   }
 
   if (data.length === 0) {
