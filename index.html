@@ -12,7 +12,6 @@
 </head>
 <body>
   
-  <!-- HEADER -->
   <header class="header">
     <div class="header-content">
       <div class="brand">
@@ -40,10 +39,8 @@
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
   <main class="content">
     
-    <!-- Search and Filter Section -->
     <div class="controls">
       <div class="search-wrapper">
         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -94,7 +91,6 @@
       </button>
     </div>
 
-    <!-- Advanced Filters Panel -->
     <div id="filters-panel" class="filters-panel hidden">
       <div class="filters-header">
         <h3>Advanced Filters</h3>
@@ -146,14 +142,13 @@
           <label class="filter-label">Vintage Range</label>
           <div class="vintage-range">
             <input type="number" id="vintage-min" placeholder="From" min="1900" max="2099">
-            <span class="range-separator">—</span>
+            <span class="range-separator">-</span>
             <input type="number" id="vintage-max" placeholder="To" min="1900" max="2099">
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Stats Bar -->
     <div class="stats-bar">
       <div class="stats-info">
         <div class="stat-item">
@@ -204,7 +199,6 @@
       </div>
     </div>
 
-    <!-- Wine Grid -->
     <div id="wine-grid">
       <div class="loading-state">
         <div class="loader"></div>
@@ -213,7 +207,6 @@
     </div>
   </main>
 
-  <!-- MODAL -->
   <div id="modal" class="modal hidden">
     <div class="modal-backdrop"></div>
     <div class="modal-container">
@@ -317,11 +310,6 @@
     </div>
   </div>
 
-  <!-- SCRIPTS -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="script.js"></script>
-
-  <!-- Floating Add Button (Mobile) -->
   <a href="https://docs.google.com/forms/d/e/1FAIpQLSfjSBi_Qbl5NTahCzF_CT8Wcys5OKFFm1lLdPHHtKHsovAvFg/viewform?usp=sharing&ouid=112209526880790779438" 
      target="_blank" 
      rel="noopener noreferrer" 
@@ -332,5 +320,8 @@
       <line x1="5" y1="12" x2="19" y2="12"></line>
     </svg>
   </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="js/script.js"></script>
 </body>
 </html>
