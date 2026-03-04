@@ -1,0 +1,51 @@
+# Enable UTF-8 encoding
+AddDefaultCharset UTF-8
+
+# Set correct MIME types
+AddType text/html .html
+AddType text/css .css
+AddType application/javascript .js
+AddType application/json .json
+
+# Enable CORS for Google Sheets CSV
+<FilesMatch "\.(html|css|js)$">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+# Force UTF-8 for text files
+<FilesMatch "\.(html|css|js|json)$">
+    ForceType 'text/plain; charset=UTF-8'
+</FilesMatch>
+
+# Correct MIME type specifically
+<FilesMatch "\.css$">
+    ForceType 'text/css; charset=UTF-8'
+</FilesMatch>
+
+<FilesMatch "\.js$">
+    ForceType 'application/javascript; charset=UTF-8'
+</FilesMatch>
+
+<FilesMatch "\.html$">
+    ForceType 'text/html; charset=UTF-8'
+</FilesMatch>
+
+# Enable compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json
+</IfModule>
+
+# Browser caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType text/html "access plus 1 hour"
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Custom error pages (optional)
+# ErrorDocument 404 /404.html
+# ErrorDocument 500 /500.html

@@ -1,0 +1,16 @@
+{
+    "name": "Cellar Collection - Personal Wine Archive",
+    "short_name": "Wine Archive",
+    "icons": [
+        {
+            "src": "images/wineFavicon.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff"
+}
