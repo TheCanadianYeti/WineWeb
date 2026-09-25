@@ -118,7 +118,7 @@ For full Apache configuration details, see [README-APACHE.md](README-APACHE.md).
 ✅ **Functional and deployed** — Active personal project.
 
 ---
-
 ## Author
 
-Built by [TheCanadianYeti](https://github.com/TheCanadianYeti)
+[Marcus Podnar](https://marcus.podnar.ca) · [GitHub](https://github.com/TheCanadianYeti) · [LinkedIn](https://www.linkedin.com/in/marcus-podnar-582187260/)
+
