@@ -1,14 +1,14 @@
 # WineWeb
 
-> A personal wine cataloguing web app backed by Google Sheets, deployable on Apache.
+A personal wine cataloguing web application backed by Google Sheets, deployable on Apache and Caddy.
 
 ---
 
 ## Overview
 
-WineWeb is a fully client-side wine collection tracker built with vanilla HTML, CSS, and JavaScript. Wine data is submitted via a Google Form, stored in a Google Sheet, and fetched live by the app using PapaParse. No backend required — it runs entirely in the browser and is deployed on an Apache server.
+WineWeb is a client-side wine collection tracker built with vanilla HTML, CSS, and JavaScript. Wine data is submitted via a Google Form, stored in a Google Sheet, and fetched live by the client application using PapaParse. The application runs entirely in the browser and requires no custom backend infrastructure.
 
-The project was built as a personal tool to track, browse, and annotate a wine collection without relying on a third-party app.
+The project was built as a lightweight utility to track, browse, and annotate wine collections without third-party vendor lock-in.
 
 ---
 
@@ -16,52 +16,47 @@ The project was built as a personal tool to track, browse, and annotate a wine c
 
 | Tool | Purpose |
 |------|---------|
-| **HTML / CSS / JavaScript** | Frontend (no frameworks) |
-| **Google Sheets + Google Forms** | Data entry and storage backend |
-| **PapaParse** | CSV parsing from the published Google Sheet |
-| **Apache (Ubuntu)** | Server hosting with `.htaccess` config |
-| **localStorage** | Persisting personal tasting notes in-browser |
+| HTML5 / CSS3 / JavaScript | Core frontend markup, responsive styling, and dynamic logic |
+| Google Sheets + Google Forms | Serverless data entry and structured storage backend |
+| PapaParse | In-browser CSV parsing from the published Google Sheet |
+| Caddy on TrueNAS | Current production reverse proxy and hosting environment |
+| Apache (Ubuntu) | Legacy deployment target with `.htaccess` configuration |
+| localStorage | In-browser persistence for user tasting notes and theme preferences |
 
 ---
 
 ## How It Works
 
-1. Wines are added to the collection by submitting a **Google Form** (linked via the "Add Bottle" button)
-2. Form responses populate a **Google Sheet**, which is published as a CSV
-3. On load, the app fetches and parses that CSV using **PapaParse**
-4. Wine label images are pulled from **Google Drive** URLs submitted in the form
-5. All filtering, sorting, and search happens client-side in JavaScript
+1. Bottles are added to the collection by submitting a Google Form linked directly within the interface.
+2. Form responses automatically append to a linked Google Sheet, which is published to the web as a live CSV feed.
+3. On application load, PapaParse fetches and parses the remote CSV file directly in the browser.
+4. Bottle label images are pulled from direct Google Drive URLs submitted through the entry form.
+5. Search indexing, sorting algorithms, and multi-parameter filtering run client-side in vanilla JavaScript.
 
 ---
 
 ## Features
 
-**Browsing & Search**
-- Full-text search across all wine fields
-- Sort by vintage, type, grape, region, or rating (ascending/descending)
-- Advanced filter panel — filter by wine type, region, grape variety, vintage range, minimum rating, and repurchase preference
-- Grid and list view toggle
+Browsing and Search:
+- Full-text search across all wine fields including varietals, regions, and notes
+- Multi-column sorting by vintage, style, grape, region, or rating
+- Filter panel supporting criteria including style, region, vintage range, rating threshold, and repurchase preference
+- Toggle controls for switching between grid and tabular list views
 
-**Wine Detail Modal**
-- Label image, tasting notes, food pairing, rating, and repurchase flag
-- Previous/next navigation between wines (keyboard arrow key support)
-- Swipe-to-close on mobile
+Wine Detail View:
+- Modal overlay displaying label imagery, tasting notes, food pairings, ratings, and repurchase status
+- Keyboard arrow navigation between records
+- Touch-friendly swipe gestures for dismissing modals on mobile
 
-**Personal Notes**
-- Per-wine personal notes editable directly in the modal
-- Notes saved to `localStorage` and persist across sessions
+Personal Notes and State Persistence:
+- Per-bottle tasting notes editable directly inside the detail modal
+- Local persistence using `localStorage` to retain edits across browsing sessions
+- Dark mode and light mode preference toggling preserved across visits
 
-**Stats Bar**
-- Live counts of total bottles, currently displayed bottles, and average rating
-
-**Export**
-- Export the currently filtered collection (including personal notes) as a CSV
-
-**PWA Support**
-- `manifest.json` included — installable as a standalone app on mobile
-
-**Light / Dark Mode**
-- Theme toggle with preference saved to `localStorage`
+Data and Portability:
+- Live status metrics calculating total inventory, active filter subsets, and aggregate rating averages
+- One-click CSV export utility to download filtered data alongside custom notes
+- Progressive Web App (PWA) configuration via `manifest.json` for mobile home-screen installation
 
 ---
 
@@ -69,56 +64,46 @@ The project was built as a personal tool to track, browse, and annotate a wine c
 
 ```
 WineWeb/
-├── index.html          # App shell and UI markup
+├── index.html          # Application markup and interface structure
 ├── css/
-│   └── style.css       # All styling with CSS custom properties + dark mode
+│   └── style.css       # Layout rules, CSS custom properties, and dark mode themes
 ├── js/
-│   └── script.js       # All app logic — data fetching, filtering, rendering
+│   └── script.js       # Data ingestion, client-side filtering, and UI rendering
 ├── images/
-│   └── wineFavicon.png
-├── manifest.json       # PWA manifest
-├── .htaccess           # Apache config (MIME types, compression, caching, CORS)
-├── deploy.sh           # Automated Apache deployment script
-└── README-APACHE.md    # Detailed Apache setup guide
+│   └── wineFavicon.png # Favicon visual asset
+├── manifest.json       # PWA metadata for mobile installation
+├── .htaccess           # Apache configuration (MIME types, gzip compression, caching, CORS)
+├── deploy.sh           # Automated deployment script for Apache targets
+└── README-APACHE.md    # Reference documentation for Apache server setup
 ```
 
 ---
 
-## Deployment
+## Infrastructure and Hosting Evolution
 
-The app is designed to run on an Apache server. A `deploy.sh` script handles permissions, Apache module setup, and service restart automatically.
+The application was initially designed and deployed for an industry-standard Apache HTTP Server environment. Configuration files (`.htaccess`) and an automated deployment script (`deploy.sh`) handled MIME mappings, gzip compression headers, browser caching rules, and CORS permissions.
 
-```bash
-# Clone the repo into your web root
-git clone https://github.com/TheCanadianYeti/WineWeb /var/www/wineweb
-cd /var/www/wineweb
-
-# Run the deployment script
-chmod +x deploy.sh
-sudo ./deploy.sh
-```
-
-For full Apache configuration details, see [README-APACHE.md](README-APACHE.md).
+The deployment infrastructure was subsequently migrated to a self-hosted TrueNAS system running behind a Caddy reverse proxy. This architecture automates HTTPS certificate provisioning and serves the client-side assets directly from local storage pools.
 
 ---
 
 ## What I Learned
 
-- Using **Google Sheets as a lightweight data backend** without any server-side code
-- Parsing and transforming live CSV data in the browser with PapaParse
-- Building a fully featured UI — modals, filters, sorting, search — in **vanilla JS with no frameworks**
-- Apache server configuration via `.htaccess` — MIME types, GZIP compression, browser caching, and CORS
-- Writing a **shell deployment script** to automate server setup
-- PWA basics with `manifest.json` for mobile installability
+- Designing a serverless, zero-maintenance datastore using published Google Sheets and Google Forms
+- Managing client-side data streaming and CSV parsing performance using PapaParse
+- Implementing state management, modals, and sorting engines in pure vanilla JavaScript without framework dependencies
+- Configuring enterprise web servers using Apache directives for caching, compression, and security headers
+- Deploying and serving static web applications through a Caddy reverse proxy on TrueNAS storage hardware
+- Implementing Progressive Web App standards to deliver installable mobile experiences
 
 ---
 
 ## Status
 
-✅ **Functional and deployed** — Active personal project.
+Live and maintained.
 
 ---
+
 ## Author
 
-[Marcus Podnar](https://marcus.podnar.ca) · [GitHub](https://github.com/TheCanadianYeti) · [LinkedIn](https://www.linkedin.com/in/marcus-podnar-582187260/)
-
+<a href="https://marcus.podnar.ca" target="_blank" rel="noopener noreferrer">Marcus Podnar</a> | <a href="https://github.com/TheCanadianYeti" target="_blank" rel="noopener noreferrer">GitHub</a> | <a href="https://www.linkedin.com/in/marcus-podnar-582187260/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
