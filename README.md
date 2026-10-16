@@ -10,6 +10,8 @@ WineWeb is a client-side wine collection tracker built with vanilla HTML, CSS, a
 
 The project was built as a lightweight utility to track, browse, and annotate wine collections without third-party vendor lock-in.
 
+Live site: <a href="https://wine.podnar.ca" target="_blank" rel="noopener noreferrer">wine.podnar.ca</a>
+
 ---
 
 ## Tech Stack
@@ -100,7 +102,7 @@ The deployment infrastructure was subsequently migrated to a self-hosted TrueNAS
 
 ## Status
 
-Live and maintained.
+Live and maintained: <a href="https://wine.podnar.ca" target="_blank" rel="noopener noreferrer">wine.podnar.ca</a>
 
 ---
 
